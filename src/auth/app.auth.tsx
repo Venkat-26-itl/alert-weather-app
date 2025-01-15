@@ -2,7 +2,8 @@ import { createContext, useContext, useState, useMemo, ReactNode } from 'react';
 
 interface AuthContextType {
   authToken: string | null;
-  login: (token: string) => void;
+  userId: number | null;
+  login: (token: string, userId: number) => void;
   logout: () => void;
 }
 
@@ -22,18 +23,21 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
 
-  const login = (token: string) => {
+  const login = (token: string, userId: number) => {
     setAuthToken(token);
+    setUserId(userId);
   };
 
   const logout = () => {
     setAuthToken(null);
+    setUserId(null);
   };
 
   const contextValue = useMemo(
-    () => ({ authToken, login, logout }),
-    [authToken]
+    () => ({ authToken, userId, login, logout }),
+    [authToken, userId]
   );
 
   return (

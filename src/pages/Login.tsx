@@ -18,20 +18,20 @@ const Login: React.FC = () => {
   const handleLogin = async (): Promise<void> => {
     const encryptionKey: string = import.meta.env.VITE_PASSWORD_ENCRYPTION_KEY;
     const encryptedPassword: string = CryptoJS.AES.encrypt(password, encryptionKey).toString();
-
+  
     const loginData = {
       email,
       password: encryptedPassword,
     };
-
+  
     try {
-      const response = await axios.post<{ token: { accessToken: string } }>(
+      const response = await axios.post<{ token: { accessToken: string, userId: number } }>(
         "http://localhost:3000/user/login",
         loginData
       );
-
+      const userId = response.data.token.userId;
       const authToken = response.data.token.accessToken;
-      login(authToken);
+      login(authToken, userId);
       navigate("/weather");
     } catch (error) {
       setSnackbarMessage("Login failed. Please try again.");
@@ -40,6 +40,7 @@ const Login: React.FC = () => {
       console.error("Login error:", error);
     }
   };
+  
 
   const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") return;
@@ -94,7 +95,7 @@ const Login: React.FC = () => {
           </button>
         </div>
       </div>
-      
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

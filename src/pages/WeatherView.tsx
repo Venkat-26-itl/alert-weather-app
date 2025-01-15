@@ -24,11 +24,11 @@ const WeatherView: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
-  const { authToken, logout } = useAuth();
+  const { authToken, userId, logout } = useAuth();
 
   const fetchStoredCountriesWithWeather = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/country/weather");
+      const response = await axios.get("http://localhost:3001/country/weather", {params: {userId}});
       if (response.data.success) {
         const countriesWithWeather = response.data.data;
         setStoredCountries(countriesWithWeather);
