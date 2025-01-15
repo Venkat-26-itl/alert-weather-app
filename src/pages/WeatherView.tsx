@@ -20,15 +20,22 @@ const WeatherView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState<Country[]>([]);
   const [loading, setLoading] = useState(false);
-  const [storedCountries, setStoredCountries] = useState<CountryWithWeather[]>([]);
+  const [storedCountries, setStoredCountries] = useState<CountryWithWeather[]>(
+    []
+  );
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "success"
+  );
   const { authToken, userId, logout } = useAuth();
 
   const fetchStoredCountriesWithWeather = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/country/weather", {params: {userId}});
+      const response = await axios.get(
+        "http://localhost:3001/country/weather",
+        { params: { userId } }
+      );
       if (response.data.success) {
         const countriesWithWeather = response.data.data;
         setStoredCountries(countriesWithWeather);
@@ -48,7 +55,9 @@ const WeatherView: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:3001/country/search?q=${query}`);
+      const response = await axios.get(
+        `http://localhost:3001/country/search?q=${query}`
+      );
       const countries = response.data;
       setSuggestions(countries);
     } catch (error) {
@@ -75,7 +84,9 @@ const WeatherView: React.FC = () => {
         }
       );
 
-      setSnackbarMessage(`Country ${country.name} has been saved successfully.`);
+      setSnackbarMessage(
+        `Country ${country.name} has been saved successfully.`
+      );
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
       fetchStoredCountriesWithWeather();
@@ -101,7 +112,10 @@ const WeatherView: React.FC = () => {
     window.location.href = "/";
   };
 
-  const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
     if (reason === "clickaway") return;
     setSnackbarOpen(false);
   };
@@ -123,12 +137,12 @@ const WeatherView: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center p-12 bg-gray-50 min-h-screen relative">
-      <button
+      <div
         onClick={handleLogout}
-        className="absolute top-4 right-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+        className="absolute top-4 right-4 text-red-500 hover:text-red-600 font-medium cursor-pointer transition"
       >
         Logout
-      </button>
+      </div>
 
       <h1 className="text-3xl font-semibold mb-8">Country Search</h1>
       <div className="relative w-96 mb-8">
@@ -140,7 +154,9 @@ const WeatherView: React.FC = () => {
           className="w-full p-3 border border-gray-300 rounded-lg text-lg"
         />
         {loading && (
-          <p className="absolute top-12 left-3 text-sm text-gray-500">Loading...</p>
+          <p className="absolute top-12 left-3 text-sm text-gray-500">
+            Loading...
+          </p>
         )}
         {suggestions.length > 0 && (
           <ul className="absolute top-12 left-0 right-0 bg-white border border-gray-300 rounded-lg max-h-48 overflow-y-auto">
@@ -156,13 +172,22 @@ const WeatherView: React.FC = () => {
           </ul>
         )}
       </div>
-      <h2 className="text-2xl font-semibold mb-4">Saved Countries and Weather</h2>
+      <h2 className="text-2xl font-semibold mb-4">
+        Saved Countries and Weather
+      </h2>
       <ul className="space-y-4">
         {storedCountries.map((country) => (
-          <div key={country.name} className="bg-white p-4 rounded-lg shadow-md w-96">
+          <div
+            key={country.name}
+            className="bg-white p-4 rounded-lg shadow-md w-96"
+          >
             <h3 className="text-xl font-semibold">{country.name}</h3>
-            <p className="text-gray-700">Temperature: {country.temperature}°C</p>
-            <p className="text-gray-700">Description: {toTitleCase(country.description)}</p>
+            <p className="text-gray-700">
+              Temperature: {country.temperature}°C
+            </p>
+            <p className="text-gray-700">
+              Description: {toTitleCase(country.description)}
+            </p>
           </div>
         ))}
       </ul>
@@ -173,7 +198,11 @@ const WeatherView: React.FC = () => {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
           {snackbarMessage}
         </Alert>
       </Snackbar>
