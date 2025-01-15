@@ -136,7 +136,7 @@ const WeatherView: React.FC = () => {
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search countries..."
+          placeholder="Enter 3 letters for search"
           className="w-full p-3 border border-gray-300 rounded-lg text-lg"
         />
         {loading && (

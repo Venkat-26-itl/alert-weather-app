@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import CryptoJS from "crypto-js";
 
 const Signup: React.FC = () => {
   const [name, setName] = useState("");
@@ -23,9 +24,12 @@ const Signup: React.FC = () => {
       setSnackbarOpen(true);
       return;
     }
+
+    const encryptionKey: string = import.meta.env.VITE_PASSWORD_ENCRYPTION_KEY;
+    const encryptedPassword: string = CryptoJS.AES.encrypt(password, encryptionKey).toString();
     const signupData = {
       email,
-      password,
+      password: encryptedPassword,
       name,
       mobileNumber: phoneNumber,
     };
@@ -38,7 +42,7 @@ const Signup: React.FC = () => {
       setSnackbarMessage(response.data.message || "Signup successful!");
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
-      setTimeout(() => navigate("/"), 2000);
+      setTimeout(() => navigate("/"), 1000);
     } catch (error) {
       setSnackbarMessage("Signup failed. Please try again.");
       setSnackbarSeverity("error");
